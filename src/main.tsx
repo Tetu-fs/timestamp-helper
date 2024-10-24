@@ -30,6 +30,8 @@ const Main = () => {
   const [youtubeId, setYoutubeId] = useState<string | null>(null)
   const [timestamps, setTimestamps] = useState<TimeStampData[]>([])
 
+  const [newTitle, setNewTitle] = useState("")
+
   const setDemoData = () => {
     setYoutubeId(DEMO_DATA.youtubeId)
     setTimestamps(DEMO_DATA.timestamps)
@@ -48,33 +50,40 @@ const Main = () => {
         if (old.length === 0 || !old.find(t => t.time === formatted)) {
           return [...old, {
             time: formatted,
-            title: ""
+            title: newTitle
           }].sort(sortByTime)
         }
         return old
       })
-    }
-  }, [ytPlayer])
 
+      setNewTitle("")
+    }
+  }, [newTitle, ytPlayer])
 
   const copyToClipboard = useCallback(() => {
     const joined = timestamps.map(t => `${t.time} ${t.title}`).join("\n")
     navigator.clipboard.writeText(joined)
   }, [timestamps])
 
-
   return (
-    <main className="h-screen w-full bg-neutral-50 relative overflow-auto">
+    <>
       <header className="fixed top-0 z-10 w-full flex items-center px-2 bg-neutral-100 shadow-md sm:px-4">
-        <div className="inline-flex items-center justify-between w-full max-w-3xl mx-auto py-2">
+        <div className="container inline-flex items-center justify-between w-full mx-auto py-2 px-4">
           <h1 className="text-xl font-bold text-neutral-900 sm:text-3xl">YouTubeタイムスタンプ作成君</h1>
           <Button buttonRole="secondary" onClick={setDemoData}>デモデータをセット</Button>
         </div>
       </header>
-      <div className="w-full flex flex-col items-center justify-center px-4">
-        <section className="inline-flex flex-col gap-4 w-full mx-auto sticky top-0 pt-16 pb-4 bg-neutral-50">
+      <main className="container max-h-screen pt-12 overflow-auto flex flex-col gap-4 px-4 bg-neutral-50 mx-auto sm:flex-row sm:overflow-hidden">
+        <section className="w-full pt-4 pb-10 inline-flex flex-col gap-2 resize-x">
+          <InputText
+            className="w-full"
+            type="text"
+            placeholder="Youtubeの動画URL"
+            pattern="^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$"
+            onChange={onChangeUrl}
+          />
           <div
-            className="flex items-center justify-center rounded-md bg-neutral-950 text-neutral-100 overflow-hidden aspect-video w-full max-w-3xl mx-auto"
+            className="inline-flex items-center justify-center rounded-md bg-neutral-950 text-neutral-100 overflow-hidden aspect-video"
           >
             {youtubeId ? (
               <YouTube
@@ -87,14 +96,14 @@ const Main = () => {
               />
             ) : (<p>URLを入力してください</p>)}
           </div>
-          <div className="flex flex-col gap-4 w-full max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-4 w-full max-w-3xl mx-auto">
+          <div className="inline-flex flex-col gap-4 w-full mx-auto">
+            <div className="inline-flex items-center gap-4 w-full mx-auto">
               <InputText
                 className="w-full"
                 type="text"
-                placeholder="Youtubeの動画URL"
-                pattern="^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$"
-                onChange={onChangeUrl}
+                placeholder="タイムスタンプタイトル"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
               />
               <div className="flex-none">
                 <Button onClick={addTimeStamp}>タイムスタンプを追加</Button>
@@ -102,14 +111,23 @@ const Main = () => {
             </div>
 
             <Button buttonRole="secondary" onClick={copyToClipboard}>タイムスタンプ一覧をコピー</Button>
-
+            <a href='https://ko-fi.com/Q5Q6UMMVT'
+              className="ml-auto"
+              target='_blank'
+              rel="noreferrer">
+              <img className="border-0 h-9" src='https://storage.ko-fi.com/cdn/kofi3.png?v=6' alt='Buy Me a Coffee at ko-fi.com' />
+            </a>
           </div>
 
 
         </section>
-        <Timestamps ytPlayer={ytPlayer} timestamps={timestamps} setTimestamps={setTimestamps} />
-      </div>
-    </main>
+        <section className="max-w-md w-full flex-none h-screen pt-4 pb-10 sm:overflow-y-auto">
+          <h3 className="text-md font-bold text-neutral-900 w-full bg-neutral-50 pt-2 pb-4 sticky top-0">タイムスタンプ</h3>
+          <Timestamps ytPlayer={ytPlayer} timestamps={timestamps} setTimestamps={setTimestamps} />
+        </section>
+      </main>
+    </>
+
   )
 }
 

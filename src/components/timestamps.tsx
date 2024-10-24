@@ -28,16 +28,16 @@ const TimeStamp = ({ timeStamp, setTimestamp, setTitle, onDelete, jumpToTime }: 
     <div className="flex items-center flex-wrap gap-2 overflow-hidden">
       <div className="flex-0">
         <InputText
-          className="max-w-20 mr-2"
+          className="max-w-24 mr-2"
           defaultValue={timeStamp.time}
           pattern="([0-5]?[0-9]:[0-5]?[0-9]:[0-5]?[0-9])|([0-5]?[0-9]:[0-5]?[0-9])"
           onBlur={(e) => setTimestamp({ newTime: e.target.value, data: timeStamp })}
         />
         <Button onClick={() => jumpToTime(timeStamp.time)}>ジャンプ</Button>
       </div>
-      <div className="inline-flex flex-1 w-full justify-between gap-4">
-        <InputText className="w-full flex-1 min-w-52"
-          type="text" placeholder="タイトル" defaultValue={timeStamp.title} onChange={onChangeTitle} />
+      <div className="inline-flex flex-1 w-full justify-between gap-2">
+        <InputText className="w-full flex-1"
+          type="text" placeholder="タイムスタンプタイトル" defaultValue={timeStamp.title} onChange={onChangeTitle} />
         <div className="flex-none">
           <Button buttonRole="danger" onClick={onClick}>削除</Button>
         </div>
@@ -95,18 +95,16 @@ export const Timestamps = ({ ytPlayer, timestamps, setTimestamps }: Props) => {
   }
 
   return (
-    <div className="pt-2 w-full pb-4">
-      <div className="flex flex-col gap-4 overflow-auto max-w-3xl mx-auto">
-        {timestamps.map((timeStamp) => (
-          <TimeStamp
-            key={timeStamp.time}
-            timeStamp={timeStamp}
-            onDelete={removeTimeStamp}
-            setTitle={setTimestampTitle}
-            setTimestamp={setTimestamp}
-            jumpToTime={jumpToTime} />
-        ))}
-      </div>
+    <div className="flex flex-col gap-4">
+      {timestamps.map((timeStamp) => (
+        <TimeStamp
+          key={timeStamp.time}
+          timeStamp={timeStamp}
+          onDelete={removeTimeStamp}
+          setTitle={setTimestampTitle}
+          setTimestamp={setTimestamp}
+          jumpToTime={jumpToTime} />
+      ))}
     </div>
   )
 }

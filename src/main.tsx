@@ -1,8 +1,13 @@
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from "@heroicons/react/16/solid"
 import { useCallback, useState } from "react"
 import YouTube, { type YouTubeEvent } from "react-youtube"
 import { Button } from "./components/button"
+import { GenericModal } from "./components/genericModal"
+import { HowToUse } from "./components/howToUse"
 import { InputText } from "./components/input"
 import { Timestamps } from "./components/timestamps"
+import { YtController } from "./components/ytController"
+import { useModal } from "./contexts/modal"
 import { type TimeStampData, getFormattedTime, getYoutubeId, sortByTime } from "./lib/util"
 
 const DEMO_DATA = {
@@ -64,26 +69,34 @@ const Main = () => {
     const joined = timestamps.map(t => `${t.time} ${t.title}`).join("\n")
     navigator.clipboard.writeText(joined)
   }, [timestamps])
-
+  const { openModal } = useModal()
+  const clickOpenModal = () => {
+    console.log("clickOpenModal")
+    openModal({
+      title: "使い方",
+      content: <HowToUse />
+    })
+  }
   return (
     <>
       <header className="fixed top-0 z-10 w-full flex items-center px-2 bg-neutral-100 shadow-md sm:px-4">
         <div className="container inline-flex items-center justify-between w-full mx-auto py-2 px-4">
           <h1 className="text-xl font-bold text-neutral-900 sm:text-3xl">YouTubeタイムスタンプ作成君</h1>
-          <Button buttonRole="secondary" onClick={setDemoData}>デモデータをセット</Button>
+          {/* <Button buttonRole="secondary" onClick={setDemoData}>デモデータをセット</Button> */}
+          <Button buttonRole="neutral" onClick={clickOpenModal}>使い方</Button>
         </div>
       </header>
       <main className="container max-h-screen pt-12 overflow-auto flex flex-col gap-4 px-4 bg-neutral-50 mx-auto sm:flex-row sm:overflow-hidden">
-        <section className="w-full pt-4 pb-10 inline-flex flex-col gap-2 resize-x">
+        <section className="w-full pt-4 pb-10 inline-flex flex-col gap-2 ">
           <InputText
-            className="w-full"
+            className="w-full border-neutral-600"
             type="text"
             placeholder="Youtubeの動画URL"
             pattern="^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$"
             onChange={onChangeUrl}
           />
           <div
-            className="inline-flex items-center justify-center rounded-md bg-neutral-950 text-neutral-100 overflow-hidden aspect-video"
+            className="inline-flex items-center justify-center bg-neutral-950 text-neutral-100 aspect-video"
           >
             {youtubeId ? (
               <YouTube
@@ -94,8 +107,9 @@ const Main = () => {
                   setYtPlayer(event)
                 }}
               />
-            ) : (<p>URLを入力してください</p>)}
+            ) : (<p>Youtubeの動画URLを入力してください</p>)}
           </div>
+          <YtController ytPlayer={ytPlayer} />
           <div className="inline-flex flex-col gap-4 w-full mx-auto">
             <div className="inline-flex items-center gap-4 w-full mx-auto">
               <InputText
@@ -106,7 +120,7 @@ const Main = () => {
                 onChange={(e) => setNewTitle(e.target.value)}
               />
               <div className="flex-none">
-                <Button onClick={addTimeStamp}>タイムスタンプを追加</Button>
+                <Button onClick={addTimeStamp}><PlusIcon className="size-6" />タイムスタンプを追加</Button>
               </div>
             </div>
 
@@ -121,11 +135,13 @@ const Main = () => {
 
 
         </section>
-        <section className="max-w-md w-full flex-none h-screen pt-4 pb-10 sm:overflow-y-auto">
+        <section className="max-w-lg w-full flex-none h-screen pt-4 pb-10 sm:overflow-y-auto">
           <h3 className="text-md font-bold text-neutral-900 w-full bg-neutral-50 pt-2 pb-4 sticky top-0">タイムスタンプ</h3>
           <Timestamps ytPlayer={ytPlayer} timestamps={timestamps} setTimestamps={setTimestamps} />
         </section>
       </main>
+
+      <GenericModal />
     </>
 
   )

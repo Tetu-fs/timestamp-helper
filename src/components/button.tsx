@@ -21,7 +21,7 @@ export const Button = ({ children, type = "button", buttonRole = "primary", onCl
   }, [buttonRole])
 
   return (
-    <button type={type} className={`${color} font-bold px-2 py-2 rounded-md text-xs bg- sm:text-sm sm:px-4 hover:opacity-70`} onClick={onClick}>
+    <button type={type} className={`${color} select-none font-bold flex items-center justify-center leading-normal gap-1 px-2 py-2 rounded-md hover:opacity-70`} onClick={onClick}>
       {children}
     </button>
   )

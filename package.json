@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
+    "lz-string": "^1.5.0",
     "react": "18",
     "react-dom": "18",
     "react-youtube": "^10.1.0"

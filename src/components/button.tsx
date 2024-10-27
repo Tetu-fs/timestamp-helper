@@ -4,9 +4,10 @@ type Props = {
   children: React.ReactNode
   type?: "button" | "submit" | "reset"
   buttonRole?: "primary" | "secondary" | "danger" | "neutral"
+  disabled?: boolean
   onClick?: () => void
 }
-export const Button = ({ children, type = "button", buttonRole = "primary", onClick }: Props) => {
+export const Button = ({ children, type = "button", buttonRole = "primary", disabled, onClick }: Props) => {
   const color = useMemo(() => {
     switch (buttonRole) {
       case "primary":
@@ -21,7 +22,10 @@ export const Button = ({ children, type = "button", buttonRole = "primary", onCl
   }, [buttonRole])
 
   return (
-    <button type={type} className={`${color} select-none font-bold flex items-center justify-center leading-normal gap-1 px-2 py-2 rounded-md hover:opacity-70`} onClick={onClick}>
+    <button
+      type={type}
+      disabled={disabled}
+      className={`${color} select-none shadow-sm font-bold flex items-center justify-center leading-normal gap-1 px-2 py-2 rounded-md hover:opacity-70 transition-colors`} onClick={onClick}>
       {children}
     </button>
   )

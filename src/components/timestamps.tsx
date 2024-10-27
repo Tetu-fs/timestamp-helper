@@ -117,7 +117,6 @@ export const Timestamps = ({ ytPlayer, timestamps, setTimestamps }: Props) => {
     setTimestamps(old => {
       return old.map(t => {
         if (t.time === input.data.time) {
-          console.log(t)
           return { time: input.newTime, title: t.title }
         }
         return t
@@ -150,8 +149,6 @@ export const Timestamps = ({ ytPlayer, timestamps, setTimestamps }: Props) => {
   if (!ytPlayer) {
     return null
   }
-
-  console.log("timestamps", timestamps)
 
   return (
     <div className="flex flex-col gap-4">

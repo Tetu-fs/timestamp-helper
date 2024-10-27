@@ -1,46 +1,36 @@
-import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from "@heroicons/react/16/solid"
-import { useCallback, useState } from "react"
+import { PlusIcon } from "@heroicons/react/16/solid"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import YouTube, { type YouTubeEvent } from "react-youtube"
 import { Button } from "./components/button"
+import { CopyButton } from "./components/copyButton"
 import { GenericModal } from "./components/genericModal"
 import { HowToUse } from "./components/howToUse"
 import { InputText } from "./components/input"
 import { Timestamps } from "./components/timestamps"
 import { YtController } from "./components/ytController"
 import { useModal } from "./contexts/modal"
-import { type TimeStampData, getFormattedTime, getYoutubeId, sortByTime } from "./lib/util"
-
-const DEMO_DATA = {
-  youtubeId: "5_HEzFkD_EE",
-  timestamps: [
-    { time: "07:16", title: "げのげ feat.ロス" },
-    { time: "15:00", title: "カワキヲアメク" },
-    { time: "20:50", title: "ただ声一つ" },
-    { time: "24:13", title: "キャットラビング" },
-    { time: "26:59", title: "マーシャル・マキシマイザー feat.可不(KAFU)" },
-    { time: "30:42", title: "イガク" },
-    { time: "33:58", title: "晴る" },
-    { time: "39:34", title: "快晴" },
-    { time: "44:56", title: "ロウワー" },
-    { time: "49:59", title: "愛して愛して愛して" },
-    { time: "54:46", title: "ERROR" },
-    { time: "59:35", title: "ひとりごつ" },
-    { time: "1:01:27", title: "告知1" },
-    { time: "1:02:07", title: "告知2" },
-  ]
-}
+import { type TimeStampData, decompressTimestampData, generateShareUrl, getFormattedTime, getYoutubeId, sortByTime } from "./lib/util"
 
 const Main = () => {
   const [ytPlayer, setYtPlayer] = useState<YouTubeEvent | null>(null)
   const [youtubeId, setYoutubeId] = useState<string | null>(null)
   const [timestamps, setTimestamps] = useState<TimeStampData[]>([])
-
+  const [shareUrl, setShareUrl] = useState("")
   const [newTitle, setNewTitle] = useState("")
 
-  const setDemoData = () => {
-    setYoutubeId(DEMO_DATA.youtubeId)
-    setTimestamps(DEMO_DATA.timestamps)
-  }
+  useEffect(() => {
+    const set = async () => {
+      const convertedURLParam = new URLSearchParams(window.location.search).get("d")
+      if (convertedURLParam) {
+        const { id, timestamps } = await decompressTimestampData(convertedURLParam)
+        setYoutubeId(id)
+        setTimestamps(timestamps)
+      }
+    }
+    set()
+
+  }, [])
+
   const onChangeUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
     const url = e.target.value
     const youtubeId = getYoutubeId(url)
@@ -65,18 +55,26 @@ const Main = () => {
     }
   }, [newTitle, ytPlayer])
 
-  const copyToClipboard = useCallback(() => {
-    const joined = timestamps.map(t => `${t.time} ${t.title}`).join("\n")
-    navigator.clipboard.writeText(joined)
+  const timestampText = useMemo(() => {
+    return timestamps.map(t => `${t.time} ${t.title}`).join("\n")
   }, [timestamps])
+
   const { openModal } = useModal()
   const clickOpenModal = () => {
-    console.log("clickOpenModal")
     openModal({
       title: "使い方",
       content: <HowToUse />
     })
   }
+
+  useEffect(() => {
+    const set = async () => {
+      const url = await generateShareUrl({ youtubeId, timestamps })
+      setShareUrl(url)
+    }
+    set()
+  }, [youtubeId, timestamps])
+
   return (
     <>
       <header className="fixed top-0 z-10 w-full flex items-center px-2 bg-neutral-100 shadow-md sm:px-4">
@@ -89,7 +87,7 @@ const Main = () => {
       <main className="container max-h-screen pt-12 overflow-auto flex flex-col gap-4 px-4 bg-neutral-50 mx-auto sm:flex-row sm:overflow-hidden">
         <section className="w-full pt-4 pb-10 inline-flex flex-col gap-2 ">
           <InputText
-            className="w-full border-neutral-600"
+            className="w-full h-10 border-neutral-600"
             type="text"
             placeholder="Youtubeの動画URL"
             pattern="^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$"
@@ -123,8 +121,8 @@ const Main = () => {
                 <Button onClick={addTimeStamp}><PlusIcon className="size-6" />タイムスタンプを追加</Button>
               </div>
             </div>
-
-            <Button buttonRole="secondary" onClick={copyToClipboard}>タイムスタンプ一覧をコピー</Button>
+            <CopyButton label="タイムスタンプ一覧をコピー" copyText={timestampText} />
+            <CopyButton label="共有URLをコピー" copyText={shareUrl} />
             <a href='https://ko-fi.com/Q5Q6UMMVT'
               className="ml-auto"
               target='_blank'
@@ -135,9 +133,11 @@ const Main = () => {
 
 
         </section>
-        <section className="max-w-lg w-full flex-none h-screen pt-4 pb-10 sm:overflow-y-auto">
-          <h3 className="text-md font-bold text-neutral-900 w-full bg-neutral-50 pt-2 pb-4 sticky top-0">タイムスタンプ</h3>
-          <Timestamps ytPlayer={ytPlayer} timestamps={timestamps} setTimestamps={setTimestamps} />
+        <section className="max-w-lg w-full flex-none h-screen pb-10 sm:overflow-y-auto">
+          <h3 className="text-md font-bold h-14 text-neutral-900 w-full bg-neutral-50 flex items-center pt-4 sticky top-0">タイムスタンプ</h3>
+          <div className="pt-2 pb-6">
+            <Timestamps ytPlayer={ytPlayer} timestamps={timestamps} setTimestamps={setTimestamps} />
+          </div>
         </section>
       </main>
 

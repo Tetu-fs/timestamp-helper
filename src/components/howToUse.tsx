@@ -5,6 +5,7 @@ export const HowToUse = () => {
   const { closeModal } = useModal()
   return (
     <div className="flex flex-col gap-2 pt-2">
+      <p>表示及び使い勝手の都合上、パソコン＋横長画面での使用を推奨します。</p>
       <div className="border border-neutral-200 rounded-md p-2">
         <img className="" src="images/howto_base.jpg" alt="使い方" />
       </div>

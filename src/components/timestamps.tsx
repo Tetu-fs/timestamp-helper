@@ -57,17 +57,17 @@ const TimeInputs = ({ timeStamp, setTimestamp, setTitle, onDelete, jumpToTime }:
   return (
     <>
       <InputText
-        className="max-w-12"
+        className="max-w-10"
         defaultValue={hour}
         onBlur={(e) => updateTime(e.target.value, TimeType.HOUR)}
       />:
       <InputText
-        className="max-w-12"
+        className="max-w-10"
         defaultValue={minute}
         onBlur={(e) => updateTime(e.target.value, TimeType.MINUTE)}
       />:
       <InputText
-        className="max-w-12"
+        className="max-w-10"
         defaultValue={second}
         onBlur={(e) => updateTime(e.target.value, TimeType.SECOND)}
       />
@@ -91,7 +91,7 @@ const TimeStamp = ({ timeStamp, setTimestamp, setTitle, onDelete, jumpToTime }: 
         <TimeInputs timeStamp={timeStamp} setTimestamp={setTimestamp} setTitle={setTitle} onDelete={onDelete} jumpToTime={jumpToTime} />
         <Button onClick={() => jumpToTime(timeStamp.time)}><PlayIcon className="size-6" /></Button>
       </div>
-      <div className="inline-flex items-center flex-1 w-full justify-between gap-2">
+      <div className="inline-flex items-center flex-1 w-full justify-between gap-4">
         <InputText className="w-full flex-1"
           type="text" placeholder="タイムスタンプタイトル" defaultValue={timeStamp.title} onChange={onChangeTitle} />
         <div className="flex-none">

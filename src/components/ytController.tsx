@@ -15,10 +15,10 @@ export const YtController = ({ ytPlayer }: Props) => {
   }
   return (
     <div className={`flex items-center gap-2 ${ytPlayer ? "" : "pointer-events-none opacity-50"}`}>
-      <Button buttonRole="neutral" onClick={() => { skip(-60) }}><ChevronDoubleLeftIcon className="size-6" />1分戻る</Button>
-      <Button buttonRole="neutral" onClick={() => { skip(-10) }}><ChevronLeftIcon className="size-6" />10秒戻る</Button>
-      <Button buttonRole="neutral" onClick={() => { skip(10) }}><ChevronRightIcon className="size-6" />10秒進む</Button>
-      <Button buttonRole="neutral" onClick={() => { skip(60) }}><ChevronDoubleRightIcon className="size-6" />1分進む</Button>
+      <Button buttonRole="neutral" onClick={() => { skip(-60) }}><ChevronDoubleLeftIcon className="size-6" />1分</Button>
+      <Button buttonRole="neutral" onClick={() => { skip(-10) }}><ChevronLeftIcon className="size-6" />10秒</Button>
+      <Button buttonRole="neutral" onClick={() => { skip(10) }}>10秒<ChevronRightIcon className="size-6" /></Button>
+      <Button buttonRole="neutral" onClick={() => { skip(60) }}>1分<ChevronDoubleRightIcon className="size-6" /></Button>
     </div>
   )
 }

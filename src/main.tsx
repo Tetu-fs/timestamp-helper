@@ -78,14 +78,20 @@ const Main = () => {
   return (
     <>
       <header className="fixed top-0 z-10 w-full flex items-center px-2 bg-neutral-100 shadow-md sm:px-4">
-        <div className="container inline-flex items-center justify-between w-full mx-auto py-2 px-4">
-          <h1 className="text-xl font-bold text-neutral-900 sm:text-3xl">YouTubeタイムスタンプ作成君</h1>
-          {/* <Button buttonRole="secondary" onClick={setDemoData}>デモデータをセット</Button> */}
+        <div className="container inline-flex items-center justify-between w-full mx-auto py-2 px-2">
+          <h1 className="text-xl font-bold text-neutral-900 md:text-3xl mr-4">YouTubeタイムスタンプ作成君</h1>
           <Button buttonRole="neutral" onClick={clickOpenModal}>使い方</Button>
+
+          <a href='https://ko-fi.com/Q5Q6UMMVT'
+            className="ml-auto hidden sm:block"
+            target='_blank'
+            rel="noreferrer">
+            <img className="border-0 h-9" src='https://storage.ko-fi.com/cdn/kofi3.png?v=6' alt='Buy Me a Coffee at ko-fi.com' />
+          </a>
         </div>
       </header>
-      <main className="container max-h-screen pt-12 overflow-auto flex flex-col gap-4 px-4 bg-neutral-50 mx-auto sm:flex-row sm:overflow-hidden">
-        <section className="w-full pt-4 pb-10 inline-flex flex-col gap-2 ">
+      <main className="container max-h-screen pt-12 overflow-auto flex flex-col gap-4 px-4 bg-neutral-50 mx-auto md:flex-row sm:overflow-hidden">
+        <section className="max-w-full w-full pt-4 pb-10 inline-flex flex-col gap-2 md:overflow-y-auto md:w-3/5">
           <InputText
             className="w-full h-10 border-neutral-600"
             type="text"
@@ -94,7 +100,7 @@ const Main = () => {
             onChange={onChangeUrl}
           />
           <div
-            className="inline-flex items-center justify-center bg-neutral-950 text-neutral-100 aspect-video"
+            className="inline-flex items-center justify-center max-h-96 bg-neutral-950 text-neutral-100 aspect-video"
           >
             {youtubeId ? (
               <YouTube
@@ -108,7 +114,7 @@ const Main = () => {
             ) : (<p>Youtubeの動画URLを入力してください</p>)}
           </div>
           <YtController ytPlayer={ytPlayer} />
-          <div className="inline-flex flex-col gap-4 w-full mx-auto">
+          <div className="inline-flex flex-col gap-2 w-full mx-auto">
             <div className="inline-flex items-center gap-4 w-full mx-auto">
               <InputText
                 className="w-full"
@@ -121,19 +127,15 @@ const Main = () => {
                 <Button onClick={addTimeStamp}><PlusIcon className="size-6" />タイムスタンプを追加</Button>
               </div>
             </div>
-            <CopyButton label="タイムスタンプ一覧をコピー" copyText={timestampText} />
-            <CopyButton label="共有URLをコピー" copyText={shareUrl} />
-            <a href='https://ko-fi.com/Q5Q6UMMVT'
-              className="ml-auto"
-              target='_blank'
-              rel="noreferrer">
-              <img className="border-0 h-9" src='https://storage.ko-fi.com/cdn/kofi3.png?v=6' alt='Buy Me a Coffee at ko-fi.com' />
-            </a>
+            <div className="inline-flex items-center justify-between gap-4 mt-4">
+              <CopyButton label="共有URLをコピー" copyText={shareUrl} />
+              <CopyButton label="タイムスタンプ一覧をコピー" copyText={timestampText} />
+            </div>
           </div>
 
 
         </section>
-        <section className="max-w-lg w-full flex-none h-screen pb-10 sm:overflow-y-auto">
+        <section className="max-w-full w-full h-screen pb-10 sm:overflow-y-auto md:w-2/5">
           <h3 className="text-md font-bold h-14 text-neutral-900 w-full bg-neutral-50 flex items-center pt-4 sticky top-0">タイムスタンプ</h3>
           <div className="pt-2 pb-6">
             <Timestamps ytPlayer={ytPlayer} timestamps={timestamps} setTimestamps={setTimestamps} />

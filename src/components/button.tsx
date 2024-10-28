@@ -25,7 +25,7 @@ export const Button = ({ children, type = "button", buttonRole = "primary", disa
     <button
       type={type}
       disabled={disabled}
-      className={`${color} select-none shadow-sm font-bold flex items-center justify-center leading-normal gap-1 px-2 py-2 rounded-md hover:opacity-70 transition-colors`} onClick={onClick}>
+      className={`${color} select-none shadow-sm font-bold flex items-center justify-center leading-normal gap-1 px-2 py-2 rounded-md hover:opacity-70 transition-colors text-sm sm:text-base`} onClick={onClick}>
       {children}
     </button>
   )

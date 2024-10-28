@@ -20,7 +20,7 @@ export const InputText = ({ className = "", defaultValue, pattern, placeholder, 
 
   return (
     <input
-      className={` bg-neutral-50 box-border border-2 border-neutral-200 text-neutral-900 rounded-md px-2 py-2 sm:text-md sm:px-3 ${className} outline-none focus:border-neutral-500`}
+      className={` bg-neutral-50 box-border border-2 border-neutral-200 text-neutral-900 rounded-md p-2 sm:text-md ${className} outline-none focus:border-neutral-500`}
       type={type} placeholder={placeholder}
       pattern={pattern}
       onChange={handleChange}
